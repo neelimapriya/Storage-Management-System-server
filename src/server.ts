@@ -16,5 +16,5 @@ async function main() {
     console.log(err);
   }
 }
-// console.log(config.DATABASE_URL)
+
 main();
