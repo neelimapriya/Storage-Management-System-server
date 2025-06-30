@@ -23,7 +23,7 @@ const logIn = catchAsync(async (req, res) => {
     secure: config.Node_env === "production",
     httpOnly: true,
     sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 365, //cookie expire duration
+    maxAge: 1000 * 60 * 60 * 24 * 365, 
   });
 
   sendResponse(res, {
@@ -61,9 +61,52 @@ const changePassword = catchAsync(async (req, res) => {
   });
 });
 
+const forgotPassword = catchAsync(async (req, res) => {
+  const { email } = req.body;
+  const code = await AuthService.forgetPassword(email);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Verification code sent to your email",
+    data: code,
+  });
+});
+
+const verifyResetCode = catchAsync(async (req, res) => {
+  const { email, code } = req.body;
+  await AuthService.verifyResetCode(email, code);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Verification code verified successfully",
+    data: null,
+  });
+});
+
+const resetPassword = catchAsync(async (req, res) => {
+  const { email, newPassword, confirmPassword } = req.body;
+  const result = await AuthService.resetPassword(
+    email,
+    newPassword,
+    confirmPassword
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
 export const AuthController = {
   signUpUser,
   logIn,
   getRefreshToken,
   changePassword,
+  forgotPassword,
+  verifyResetCode,
+  resetPassword,
 };

@@ -10,13 +10,13 @@ cloudinary.config({
 });
 
 export const sendImageToCloudinary = (
-  carImage: string,
+  userImage: string,
   path: string
 ): Promise<Record<string, unknown>> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       path,
-      { public_id: carImage },
+      { public_id: userImage },
       function (error, result) {
         if (error) {
           reject(error);

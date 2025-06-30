@@ -6,6 +6,9 @@ export interface IUser {
   email: string;
   password: string;
   confirmPassword: string;
+  passwordResetCode?: string;
+  passwordResetExpires?: Date;
+   passwordChangeAt?: Date;
 }
 
 export interface UserModel extends Model<IUser> {
