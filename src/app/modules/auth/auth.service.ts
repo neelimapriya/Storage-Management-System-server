@@ -165,7 +165,9 @@ const forgetPassword = async (email: string) => {
 };
 
 const verifyResetCode = async (email: string, code: string) => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select(
+    "+passwordResetCode +passwordResetExpires"
+  );
 
   if (!user) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
@@ -202,58 +204,34 @@ const verifyResetCode = async (email: string, code: string) => {
   return true;
 };
 
-
 const resetPassword = async (
   email: string,
   newPassword: string,
   confirmPassword: string
 ) => {
-  // 1. Checking new pass with confirm pass
-  if (newPassword !== confirmPassword) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "Passwords do not match");
-  }
+  // 1. Find user by email
+  const user = await User.findOne({ email });
 
-  // 2. Find user and reset code and expiry fields
-  const user = await User.findOne({ email }).select("+passwordResetCode +passwordResetExpires");
-
-  // 3. Checking is this exist or not
   if (!user) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   }
 
-  // 4. Checking reset code
-  if (!user.passwordResetCode) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "No reset code found for this user");
+  // 2. checking pass
+  if (newPassword !== confirmPassword) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Passwords do not match");
   }
 
-  // 5. Checking reset code expiry date
-  if (!user.passwordResetExpires) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "No expiry time set for the reset code");
-  }
+  // 3. Setup new pass into db (through bycrypt middleware)
+  user.password = newPassword;
 
-  // 6. Checking code validation
-  if (user.passwordResetExpires < new Date()) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "Reset code has expired");
-  }
-
-  // 7. Hashing new pass
-  const hashedPassword = await bcrypt.hash(
-    newPassword,
-    Number(config.bcrypt_salt_round)
-  );
-
-  // 8. Updating user pass
-  user.password = hashedPassword;
+  // clear reset token
   user.passwordResetCode = undefined;
   user.passwordResetExpires = undefined;
-  user.passwordChangeAt = new Date();
 
-  // 9. Save and update user pass
   await user.save();
 
-  return true;
+  return { message: "Password reset successfully" };
 };
-
 
 export const AuthService = {
   signUpUser,
@@ -262,5 +240,5 @@ export const AuthService = {
   changePassword,
   forgetPassword,
   verifyResetCode,
-  resetPassword
+  resetPassword,
 };

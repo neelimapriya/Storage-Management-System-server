@@ -40,19 +40,32 @@ userSchema
   });
 
 //validation
+// userSchema.pre("save", async function (next) {
+//   const user = this as any;
+
+//   if (user.isModified("password")) {
+//     if (user.password !== user.confirmPassword) {
+//       throw new Error("Passwords do not match");
+//     }
+
+//     user.password = await bcrypt.hash(user.password, config.bcrypt_salt_round);
+//   }
+
+//   next();
+// });
+
 userSchema.pre("save", async function (next) {
-  const user = this as any;
+  if (!this.isModified("password")) return next();
 
-  if (user.isModified("password")) {
-    if (user.password !== user.confirmPassword) {
-      throw new Error("Passwords do not match");
-    }
-
-    user.password = await bcrypt.hash(user.password, config.bcrypt_salt_round);
-  }
+  const hashed = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_round)
+  );
+  this.password = hashed;
 
   next();
 });
+
 
 // Static methods
 userSchema.static("isUserExistsByEmail", async function (email: string) {
@@ -66,9 +79,6 @@ userSchema.static(
   }
 );
 
-userSchema.static("isUserBlocked", async function (status: string) {
-  return status === "blocked";
-});
 
 userSchema.static(
   "isJWTissuedBeforePasswordChange",
