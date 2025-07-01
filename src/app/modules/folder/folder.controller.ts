@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { FolderService } from "./folder.service";
 import { Request, Response } from "express";
 import { createFolderSchema } from "./folder.validation";
+import { IFolder } from "./folder.interface";
 
 const createFolder = catchAsync(async (req: Request, res: Response) => {
   await createFolderSchema.parseAsync(req.body);
@@ -11,7 +12,7 @@ const createFolder = catchAsync(async (req: Request, res: Response) => {
     ...req.body,
     user: req.user._id,
   };
-// console.log(req.body);
+  // console.log(req.body);
   const result = await FolderService.createFolderService(payload);
 
   sendResponse(res, {
@@ -22,59 +23,88 @@ const createFolder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllFolder=catchAsync(async(req:Request, res:Response)=>{
-  const userId=req.user._id
+const getAllFolder = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user._id;
   // console.log(userId);
-  const result = await FolderService.getAllFoldersService(userId)
+  const result = await FolderService.getAllFoldersService(userId);
   // console.log(result);
-   sendResponse(res, {
+  sendResponse(res, {
     statusCode: StatusCodes.CREATED,
     success: true,
     message: "Folders retrieve successfully",
     data: result,
   });
-})
-const getSingleFolder=catchAsync(async(req:Request, res:Response)=>{
-  const {id}=req.params
+});
+const getSingleFolder = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
   // console.log(id);
-  const result = await FolderService.getSingleFolderService(id)
+  const result = await FolderService.getSingleFolderService(id);
   console.log(result);
-   sendResponse(res, {
+  sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Folder retrieve successfully",
     data: result,
   });
-})
+});
 
-const updateFolder=catchAsync(async(req:Request, res:Response)=>{
-  const {id}=req.params
+const updateFolder = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
   console.log(id);
-  const updateFolderData=req.body
-  const result= await FolderService.updateFolderService(id,updateFolderData)
+  const updateFolderData = req.body;
+  const result = await FolderService.updateFolderService(id, updateFolderData);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Folder updated successfully",
     data: result,
   });
-})
+});
 
-const deleteFolder=catchAsync(async(req:Request, res:Response)=>{
-  const {id}=req.params
-  await FolderService.deleteFolderService(id)
-  sendResponse(res,{
+const deleteFolder = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await FolderService.deleteFolderService(id);
+  sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Folder deleted successfully",
     data: null,
-  })
-})
+  });
+});
+
+const toggleFavoriteButtonFolder = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = (await FolderService.toggleFavoriteButtonFolder(
+      id
+    )) as IFolder;
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: `Folder is now ${result.favorite ? "favorite" : "not favorite"}`,
+      data: result,
+    });
+  }
+);
+const getFavoriteFolders = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user._id;
+
+  const result = await FolderService.getFavoriteFoldersService(userId);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Favorite folders retrieved successfully",
+    data: result,
+  });
+});
 
 export const FolderController = {
   createFolder,
   getAllFolder,
   getSingleFolder,
   updateFolder,
-  deleteFolder
+  deleteFolder,
+  toggleFavoriteButtonFolder,
+  getFavoriteFolders,
 };

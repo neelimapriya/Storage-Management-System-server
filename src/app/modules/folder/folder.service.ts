@@ -10,8 +10,8 @@ const createFolderService = async (
 };
 
 const getAllFoldersService = async (userId: string) => {
-  if(!userId){
-    throw new AppError(404, "user not found")
+  if (!userId) {
+    throw new AppError(404, "user not found");
   }
   const result = await Folder.find({ user: userId }).sort({ createdAt: -1 });
   return result;
@@ -49,6 +49,25 @@ const deleteFolderService = async (id: string) => {
   return result;
 };
 
+const toggleFavoriteButtonFolder = async (
+  folderId: string
+): Promise<IFolder> => {
+  const folder = await Folder.findById(folderId);
+  if (!folder) {
+    throw new AppError(404, "Folder not found");
+  }
+  folder.favorite = !folder.favorite;
+  await folder.save();
+  return folder;
+};
+
+const getFavoriteFoldersService = async (userId: string) => {
+  const result = await Folder.find({ user: userId, favorite: true }).sort({
+    createdAt: -1,
+  });
+
+  return result;
+};
 
 
 export const FolderService = {
@@ -57,4 +76,6 @@ export const FolderService = {
   getSingleFolderService,
   updateFolderService,
   deleteFolderService,
+  toggleFavoriteButtonFolder,
+  getFavoriteFoldersService
 };
