@@ -17,10 +17,44 @@ const getAllFoldersService = async (userId: string) => {
   return result;
 };
 
+const getSingleFolderService = async (id: string) => {
+  const result = await Folder.findById(id);
+  if (!result) {
+    throw new AppError(404, "Folder not found");
+  }
+  return result;
+};
+
+const updateFolderService = async (
+  id: string,
+  data: Partial<IFolder>
+): Promise<IFolder | null> => {
+  const result = await Folder.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!result) {
+    throw new AppError(404, "Folder not found");
+  }
+
+  return result;
+};
+
+const deleteFolderService = async (id: string) => {
+  const result = await Folder.findByIdAndDelete(id);
+  if (!result) {
+    throw new AppError(404, "Folder not found or already deleted");
+  }
+  return result;
+};
+
 
 
 export const FolderService = {
   createFolderService,
   getAllFoldersService,
- 
+  getSingleFolderService,
+  updateFolderService,
+  deleteFolderService,
 };
