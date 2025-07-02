@@ -27,16 +27,19 @@ const storage = multer.diskStorage({
 
 export const upload = multer({ storage });
 
-export const sendImageToTheCloudinary = (
+export const sendPDFToCloudinary = (
   publicId: string,
-  path: string
+  filePath: string
 ): Promise<UploadApiResponse> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
-      path,
-      { public_id: publicId,resource_type: "auto", },
+      filePath,
+      {
+        public_id: publicId,
+        resource_type: "auto",
+      },
       (error, result) => {
-        fs.unlink(path, () => {}); 
+        fs.unlink(filePath, () => {});
         if (error) return reject(error);
         resolve(result as UploadApiResponse);
       }
