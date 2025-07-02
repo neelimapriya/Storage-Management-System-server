@@ -3,7 +3,7 @@ import { UploadFile } from "../files/files.model";
 import { PDF } from "../pdf/pdf.model";
 
 export const getUserStorageUsage = async (userId: string) => {
-  // Notes: sum of content size
+  
   const notes = await Note.find({ user: userId }).select("content");
   const notesBytes = notes.reduce(
     (acc, note) => acc + Buffer.byteLength(note.content || "", "utf-8"),

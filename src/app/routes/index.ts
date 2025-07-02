@@ -5,6 +5,7 @@ import { FolderRoute } from "../modules/folder/folder.route";
 import { FilesRoutes } from "../modules/files/files.route";
 import { PDFRoutes } from "../modules/pdf/pdf.route";
 import { NoteRoute } from "../modules/note/note.route";
+import { storageRoute } from "../modules/storage/storage.route";
 
 const router = Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: "/note",
     route: NoteRoute,
+  },
+  {
+    path: "/storage",
+    route: storageRoute,
   },
 ];
 

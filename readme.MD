@@ -30,6 +30,18 @@ CLOUDINARY_API_SECRET=your_api_secret
 `npm run build`
 `npm run start:prod`
 
+### All Api
+```
+Auth- https://spark-tech-agency.vercel.app/api/auth
+User- https://spark-tech-agency.vercel.app/api/user
+Folder- https://spark-tech-agency.vercel.app/api/folder
+Image- https://spark-tech-agency.vercel.app/api/image
+Pdf- https://spark-tech-agency.vercel.app/api/pdf
+Note- https://spark-tech-agency.vercel.app/api/note
+storage- https://spark-tech-agency.vercel.app/api/storage
+```
+
+
 ## AuthApi
 ```
 | Method | Endpoint             | Description       |
