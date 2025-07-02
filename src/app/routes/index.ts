@@ -4,6 +4,7 @@ import { AuthRoute } from "../modules/auth/auth.route";
 import { FolderRoute } from "../modules/folder/folder.route";
 import { FilesRoutes } from "../modules/files/files.route";
 import { PDFRoutes } from "../modules/pdf/pdf.route";
+import { NoteRoute } from "../modules/note/note.route";
 
 const router = Router();
 
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: "/pdf",
     route: PDFRoutes,
+  },
+  {
+    path: "/note",
+    route: NoteRoute,
   },
 ];
 
