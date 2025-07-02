@@ -7,4 +7,5 @@ export interface IPDF {
   favorite?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+   size?: number;
 }

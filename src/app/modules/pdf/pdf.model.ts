@@ -16,6 +16,7 @@ const pdfSchema = new Schema<IPDF>(
       type: Boolean,
       default: false,
     },
+     size: { type: Number },
   },
   { timestamps: true }
 );

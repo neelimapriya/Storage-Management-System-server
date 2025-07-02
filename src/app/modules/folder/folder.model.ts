@@ -6,6 +6,7 @@ import { IFolder } from "./folder.interface";
     name: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     favorite: { type: Boolean, default: false },
+    
   },
   { timestamps: true }
 );

@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 
   const result = await PDF.create({
     url: secure_url,
+    size: file.size,
     user: new mongoose.Types.ObjectId(userId),
   });
 

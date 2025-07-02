@@ -18,6 +18,7 @@ const uploadFilesSchema = new Schema<IFiles>(
       required: true,
     },
     favorite: { type: Boolean, default: false },
+     size: { type: Number },
   },
   { timestamps: true }
 );

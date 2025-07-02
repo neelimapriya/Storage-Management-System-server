@@ -8,4 +8,5 @@ export interface INote {
   favorite?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+   size?: number;
 }

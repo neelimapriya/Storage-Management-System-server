@@ -15,6 +15,7 @@ const uploadImageService = async (
   const result = await UploadFile.create({
     type: file.mimetype.includes("pdf") ? "pdf" : "image",
     url: secure_url,
+    size: file.size,
     user: new mongoose.Types.ObjectId(userId),
   });
 

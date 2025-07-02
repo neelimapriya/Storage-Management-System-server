@@ -6,4 +6,5 @@ export interface IFolder {
   favorite: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+   size?: number;
 }
